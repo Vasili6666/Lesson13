@@ -78,8 +78,6 @@ public class LoginTests {
                 .body("code", is("1207"),"message", is("User not found!"));
     }
 
-
-
     @Test
     @DisplayName("Создание пользователя с пустым именем")
     public void createUserWithEmptyUsernameTest() {
@@ -94,7 +92,6 @@ public class LoginTests {
                 .statusCode(400)
                 .body("message", containsString("UserName and Password required"));
     }
-
 
     @Test
     @DisplayName("Удаление несуществующего пользователя")
@@ -111,7 +108,6 @@ public class LoginTests {
                 .body("message", containsString("User Id not correct!"));
     }
 
-
     @Test
     @DisplayName("Получение списка книг")
     public void getBooksTest() {
@@ -124,5 +120,55 @@ public class LoginTests {
                 .log().body()
                 .statusCode(200)
                 .body("books", not(empty()));
+    }
+
+    @Test
+    @DisplayName("Удаление временного пользователя (DELETE)")
+    public void deleteTempUserTest() {
+        String tempUser = "tempUser_" + System.currentTimeMillis();
+        String tempPassword = "TempPass123!";
+
+
+        given()
+                .contentType(JSON)
+                .body("{ \"userName\": \"" + tempUser + "\", \"password\": \"" + tempPassword + "\" }")
+                .when()
+                .post("/Account/v1/User")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(201);
+
+
+        given()
+                .header("Authorization", "Bearer " + token)
+                .pathParam("username", tempUser)
+                .when()
+                .delete("/Account/v1/User/{username}")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(204);
+    }
+
+    @Test
+    @DisplayName("Удаление книги.")
+    public void deleteBookTest() {
+
+        String isbn = "9781593277574";
+        String requestBody = "{\n" +
+                "  \"isbn\": \"" + isbn + "\",\n" +
+                "  \"userId\": \"" + EXISTING_USER + "\"\n" +
+                "}";
+
+        given()
+                .contentType(JSON)
+                .body(requestBody)
+                .when()
+                .delete("/BookStore/v1/Book")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(401);
     }
 }
