@@ -19,7 +19,7 @@ public class LoginTests {
     public static void setup() {
         RestAssured.baseURI = BASE_URL;
         token = given()
-                .contentType("application/json")
+                .contentType(JSON)
                 .body("{ \"userName\": \"" + EXISTING_USER + "\", \"password\": \"" + EXISTING_PASSWORD + "\" }")
                 .when()
                 .post("/Account/v1/GenerateToken")
@@ -35,7 +35,7 @@ public class LoginTests {
     @DisplayName("Авторизация с некорректным паролем")
     public void unsuccessfullLoginTest() {
         given()
-                .contentType("application/json")
+                .contentType(JSON)
                 .body("{ \"userName\": \"" + EXISTING_USER + "\", \"password\": \"1234567\" }")
                 .when()
                 .post("/Account/v1/GenerateToken")
@@ -51,7 +51,7 @@ public class LoginTests {
     @DisplayName("Авторизация с корректными данными")
     public void successfullLoginTest() {
         given()
-                .contentType("application/json")
+                .contentType(JSON)
                 .body("{ \"userName\": \"" + EXISTING_USER + "\", \"password\": \"" + EXISTING_PASSWORD + "\" }")
                 .when()
                 .post("/Account/v1/GenerateToken")
@@ -82,7 +82,7 @@ public class LoginTests {
     @DisplayName("Создание пользователя с пустым именем")
     public void createUserWithEmptyUsernameTest() {
         given()
-                .contentType("application/json")
+                .contentType(JSON)
                 .body("{ \"userName\": \"\", \"password\": \"Test123!\" }")
                 .when()
                 .post("/Account/v1/User")
