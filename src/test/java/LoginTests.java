@@ -68,14 +68,14 @@ public class LoginTests {
     public void checkAuthorizationWithWrongUserTest() {
         given()
                 .header("Authorization", "Bearer " + token)
-                .pathParam("username","wert")
+                .pathParam("username", "wert")
                 .when()
                 .get("/Account/v1/User/{username}")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(401)
-                .body("code", is("1207"),"message", is("User not found!"));
+                .body("code", is("1207"), "message", is("User not found!"));
     }
 
     @Test
